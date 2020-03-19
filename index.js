@@ -46,7 +46,9 @@ function Person(name, age) {
 }
 
 Person.prototype.eat = function(food) {
-  if (this.stomach.length < 10) this.stomach.push(food);
+  if (this.stomach.length < 10) {
+    this.stomach.push(food);
+  }
   //else console.log("Stomach is full!");
 }
 
@@ -54,7 +56,7 @@ Person.prototype.poop = function() {
   this.stomach = [];
 }
 
-Person.prototype.toString() = function() {
+Person.prototype.toString = function() {
   return `${this.name}, ${this.age}`;
 }
 
@@ -72,8 +74,27 @@ Person.prototype.toString() = function() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
+function Car(model, milesPerGallon) {
+  this.model = model;
+  this.milesPerGallon = milesPerGallon;
+  this.tank = 0;
+  this.odometer = 0;
+}
 
+Car.prototype.fill = function(gallons) {
+  this.tank += gallons;
+}
+
+Car.prototype.drive = function(miles) {
+  let drivableMiles = this.tank * this.milesPerGallon;
+  if (miles < drivableMiles) {
+    this.odometer += miles;
+    this.tank -= (miles/this.milesPerGallon);
+  } else {
+      this.odometer += drivableMiles;
+      this.tank = 0;
+      return `I ran out of fuel at ${this.odometer} miles!`;
+  }
 }
 
 /*
@@ -83,18 +104,27 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age);
+  this.favoriteToy = favoriteToy;
+}
 
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.play = function() {
+  return `Playing with ${this.favoriteToy}`;
 }
 
 /* 
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. "this", when used in the global scope, refers to wherever JS is running, such as the console
+  2. "this" is automatically bound to (refers to) an object when used inside that object's body,
+  such as in a method (called implicit binding). Another way to think of it is that "this" refers
+  to the object to the left of the dot when a method is called.
+  3. "this" also will refer to the object being created and output from a constructor function
+  4. When using .bind, .call, & .apply when calling a method, "this" will refer to the object being passed into these methods,
+  overriding the default binding of "this"
 */
 
 
